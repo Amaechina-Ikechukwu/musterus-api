@@ -48,7 +48,7 @@
     "@types/swagger-express-validator": "^1.0.2",
     "@types/yamljs": "^0.2.34",
     "i": "^0.3.7",
-    "npm": "^10.2.4",
+    "npm": "^8.19.2",
     "ts-jest": "^29.1.1"
   }
 }
