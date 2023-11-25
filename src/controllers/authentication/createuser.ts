@@ -2,13 +2,13 @@ import { auth, FirebaseError } from "firebase-admin";
 import { User } from "../../interfaces/userinterface";
 import AddUserToDatabase from "./addusertodatabase";
 
-export async function CreateUser(user: User) {
+export async function CreateUser(user: any) {
   try {
     const userRecord = await auth().createUser({
       email: user.email,
       // phoneNumber: user.phoneNumber,
       password: user.password,
-      displayName: user.fullName,
+      displayName: user.firstname + " " + user.lastname,
       photoURL: user.photoURL,
       disabled: false,
     });
