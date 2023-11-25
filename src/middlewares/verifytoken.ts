@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
+import { auth } from "firebase-admin";
 
-export const VerifyToken = (
+export const VerifyToken = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -17,10 +18,16 @@ export const VerifyToken = (
     if (!token || token.length < 5) {
       return res.status(401).json({ error: "Invalid token" });
     }
-
+    await auth()
+      .getUser(token)
+      .then((userRecord) => {
+        (req as any).uid = token;
+        next();
+      })
+      .catch((error) => {
+        return res.status(401).json({ error: error });
+      });
     // Adding the UID to the request object for future use in the route handlers
-    (req as any).uid = token;
-    next();
   } catch (error) {
     console.error(error);
     return res.status(401).json({ error: "Invalid token" });

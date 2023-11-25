@@ -2,28 +2,20 @@ import { getFirestore } from "firebase-admin/firestore";
 import generateUniqueID from "../../middlewares/uuids";
 import { MakeAnAdmin } from "./AdminActions";
 
-export default async function CreateGroup(
+export default async function UpdateGroup(
   uid: string,
+  groupid: string,
   groupInfo: any
 ): Promise<string> {
   try {
-    const uuid = generateUniqueID();
     await getFirestore()
       .collection("groups")
-      .doc(uuid)
+      .doc(groupid)
       .collection("groupinfo")
       .doc("info")
-      .set(groupInfo)
-      .then(async (result) => {
-        await getFirestore()
-          .collection("profile")
-          .doc(uid)
-          .collection("groups")
-          .doc(uuid)
-          .set({});
-      });
-    await MakeAnAdmin(uid, uuid);
-    return "created";
+      .update(groupInfo);
+
+    return "updated";
   } catch (error: any) {
     console.log(error);
     if (error instanceof Error && "code" in error) {
