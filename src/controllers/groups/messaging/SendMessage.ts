@@ -4,7 +4,8 @@ import GetUserProfileInformation from "../../profile/getuserprofileinformation";
 export default async function SendMessageToGroup(
   uid: string,
   groupId: string,
-  message: string
+  message: string,
+  media: any[]
 ): Promise<any> {
   const firestore = getFirestore();
 
@@ -17,7 +18,7 @@ export default async function SendMessageToGroup(
       .doc(groupId)
       .collection("chats")
       .doc()
-      .set({ from: uid, message, sent: FieldValue.serverTimestamp() });
+      .set({ from: uid, message, sent: FieldValue.serverTimestamp(), media });
 
     return "sent";
   } catch (error: any) {

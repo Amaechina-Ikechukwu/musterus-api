@@ -110,8 +110,8 @@ grouprouter.post(
   async (req: Request, res: Response) => {
     try {
       const uid = (req as any).uid;
-      const { message, groupid } = req.body;
-      const result = await SendMessageToGroup(uid, groupid, message);
+      const { message, groupid ,media} = req.body;
+      const result = await SendMessageToGroup(uid, groupid, message,media);
 
       res.status(200).json({ message: result });
     } catch (err: any) {
