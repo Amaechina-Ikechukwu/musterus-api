@@ -6,6 +6,7 @@ import router from "./routes/authroute";
 import profilerouter from "./routes/profileroute";
 import messagingRouter from "./routes/messagingroute";
 import grouprouter from "./routes/grouproute";
+import dmrouter from "./routes/directmessageroute";
 
 const app = express();
 app.use(express.json());
@@ -28,6 +29,7 @@ app.use(express.json());
     app.use("/auth", router);
     app.use("/profile", profilerouter);
     app.use("/groups", grouprouter);
+    app.use("/dm", dmrouter);
 
     // Start the server
     const PORT = process.env.PORT || 3004;

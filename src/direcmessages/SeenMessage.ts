@@ -1,24 +1,20 @@
 import { getFirestore, FieldValue } from "firebase-admin/firestore";
 
-export default async function SeenGroupMessage({
-  messageid,
-  uid,
-  groupid,
-}: {
-  messageid: string;
-  uid: string;
-  groupid: string;
-}): Promise<any> {
+export default async function SeenMessage(
+  uid: string,
+  conversationid: string,
+  messageid: string
+): Promise<any> {
   const firestore = getFirestore();
 
   try {
     // Create a reference to the 'groups' collection
-    const groupsRef = firestore.collection("groups");
+    const groupsRef = firestore.collection("direct_messages");
 
     // Check if the uid exists in the 'seenby' collection for the given message
     const seenByRef = groupsRef
-      .doc(groupid)
-      .collection("chats")
+      .doc(conversationid)
+      .collection("messages")
       .doc(messageid)
       .collection("seenby")
       .doc(uid);
