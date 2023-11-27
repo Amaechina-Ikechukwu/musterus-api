@@ -1,10 +1,9 @@
 import { getFirestore } from "firebase-admin/firestore";
 import generateUniqueID from "../../middlewares/uuids";
 
-export default async function CreateGroupPost(
+export default async function CreatePost(
   uid: string,
 
-  groupid: string,
   postinfo: any
 ): Promise<string> {
   try {
@@ -12,7 +11,7 @@ export default async function CreateGroupPost(
     await getFirestore()
       .collection("posts")
       .doc(postid)
-      .set({ ...postinfo, author: uid, groupid });
+      .set({ ...postinfo, author: uid });
 
     return "post created";
   } catch (error: any) {

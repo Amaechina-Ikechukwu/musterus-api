@@ -1,4 +1,4 @@
-import { getFirestore } from "firebase-admin/firestore";
+import { Filter, getFirestore } from "firebase-admin/firestore";
 
 export async function GetConversationId(
   friendId: string,
@@ -7,17 +7,20 @@ export async function GetConversationId(
   const firestore = getFirestore();
 
   try {
-    // Create a reference to the 'conversationIDs' collection
+    // Create a reference to the 'conversationIDS' collection
     const conversationRef = firestore.collection("conversationIDS");
 
     // Query for conversations where both participants are present
     const conversationQuery = await conversationRef
-      .where("participants", "array-contains", [uid, friendId])
+      .where(
+        Filter.or(
+          Filter.where(`participants`, "==", [uid, friendId]),
+          Filter.where(`participants`, "==", [friendId, uid])
+        )
+      )
       .get();
-
     if (!conversationQuery.empty) {
       // If conversations are found, return the first conversation ID
-      console.log(conversationQuery.docs);
       return conversationQuery.docs[0].id;
     } else {
       // Return null if the conversation doesn't exist

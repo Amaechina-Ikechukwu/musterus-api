@@ -1,7 +1,6 @@
 import { getFirestore } from "firebase-admin/firestore";
-import generateUniqueID from "../../../../middlewares/uuids";
 
-export default async function UnLikeGroupPost(
+export default async function UnLikePost(
   uid: string,
 
   postid: string

@@ -1,7 +1,6 @@
 import { getFirestore } from "firebase-admin/firestore";
-import generateUniqueID from "../../../../middlewares/uuids";
 
-export default async function LikeGroupPost(
+export default async function LikePost(
   uid: string,
   postid: string
 ): Promise<string> {

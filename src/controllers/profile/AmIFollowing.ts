@@ -1,29 +1,22 @@
-import { getFirestore } from "firebase-admin/firestore";
+import { FieldValue, getFirestore } from "firebase-admin/firestore";
 
 function removeFieldsFromUserProfile(userProfile: any) {
   delete userProfile.password;
   return userProfile;
 }
 
-export default async function GetUserFriends(uid: string): Promise<any[]> {
+export default async function AmIFollowingUser(
+  uid: string,
+  userid: string
+): Promise<boolean> {
   try {
-    const friendsCollection = await getFirestore()
+    const result = await getFirestore()
       .collection("profile")
       .doc(uid)
       .collection("following")
+      .doc(userid)
       .get();
-
-    if (friendsCollection.empty) {
-      return []; // Return an empty array if the user has no friends
-    } else {
-      // Map through the friends collection and retrieve each friend's data
-      const friendsData = friendsCollection.docs.map((friendDoc) => {
-        const friend = friendDoc.data();
-        return friend;
-      });
-
-      return friendsData;
-    }
+    return result.exists;
   } catch (error: any) {
     console.error("Error fetching user's friends:", error);
     if (error instanceof Error && "code" in error) {

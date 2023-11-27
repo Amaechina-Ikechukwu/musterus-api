@@ -1,17 +1,18 @@
 import { getFirestore, FieldValue } from "firebase-admin/firestore";
 
 export interface Message {
+  author: string;
+  reciever: string;
   text: string;
-  senderId: string;
-  timestamp: FieldValue;
-  mediaUrl?: string; // Optional media URL
+  sent: FieldValue;
+  mediaurl?: string; // Optional media URL
   type: string; // Message type (text, image, etc.)
 }
 
 export default async function SendMessage(
   conversationid: string,
   message: Message
-): Promise<any> {
+): Promise<string> {
   const firestore = getFirestore();
 
   try {
@@ -28,6 +29,14 @@ export default async function SendMessage(
 
     // Add the message to the conversation subcollection
     await messagesRef.add(message);
+
+    const participants = conversationid.split("_");
+
+    // Update participants in a separate collection (if needed)
+    await firestore
+      .collection("direct_messages")
+      .doc(conversationid)
+      .set({ participants }); // Set participants directly in the conversation document
 
     return "messageSent";
   } catch (error: any) {

@@ -4,9 +4,9 @@ import { initializeApp, applicationDefault, cert } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
 import router from "./routes/authroute";
 import profilerouter from "./routes/profileroute";
-import messagingRouter from "./routes/messagingroute";
 import grouprouter from "./routes/grouproute";
 import dmrouter from "./routes/directmessageroute";
+import homerouter from "./routes/homeroute";
 
 const app = express();
 app.use(express.json());
@@ -30,6 +30,7 @@ app.use(express.json());
     app.use("/profile", profilerouter);
     app.use("/groups", grouprouter);
     app.use("/dm", dmrouter);
+    app.use("/home", homerouter);
 
     // Start the server
     const PORT = process.env.PORT || 3004;
