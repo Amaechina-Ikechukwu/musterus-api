@@ -1,4 +1,4 @@
-import { getFirestore } from "firebase-admin/firestore";
+import { FieldValue, getFirestore } from "firebase-admin/firestore";
 
 export default async function CommentOnPost(
   uid: string,
@@ -11,7 +11,11 @@ export default async function CommentOnPost(
       .doc(postid)
       .collection("comments")
       .doc()
-      .set({ comment: comment, author: uid });
+      .set({
+        comment: comment,
+        author: uid,
+        createdAt: FieldValue.serverTimestamp(),
+      });
 
     return "commented on post";
   } catch (error: any) {

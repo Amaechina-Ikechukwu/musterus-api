@@ -165,29 +165,24 @@ homerouter.post(
   }
 );
 
-homerouter.post(
-  "/posts",
-  checkRequestBodyParams(["groupid"]),
-  VerifyToken,
-  async (req: Request, res: Response) => {
-    try {
-      const uid = (req as any).uid;
+homerouter.get("/posts", VerifyToken, async (req: Request, res: Response) => {
+  try {
+    const uid = (req as any).uid;
 
-      const result = await GetUsersPosts(uid);
+    const result = await GetUsersPosts(uid);
 
-      res.status(200).json({ data: result });
-    } catch (err: any) {
-      if (err instanceof CustomUserProfileError) {
-        return res.status(400).json({ error: err.message });
-      } else if (err instanceof Error) {
-        // Handle other specific errors as needed
-        return res.status(500).json({ error: err });
-      }
-
-      return res.json({ error: err });
+    res.status(200).json({ data: result });
+  } catch (err: any) {
+    if (err instanceof CustomUserProfileError) {
+      return res.status(400).json({ error: err.message });
+    } else if (err instanceof Error) {
+      // Handle other specific errors as needed
+      return res.status(500).json({ error: err });
     }
+
+    return res.json({ error: err });
   }
-);
+});
 
 homerouter.delete(
   "/deleteuser",

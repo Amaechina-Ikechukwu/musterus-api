@@ -14,15 +14,25 @@ class CustomUserProfileError extends Error {
     this.name = "CustomUserProfileError";
   }
 }
-router.post("/signup", async (req: Request, res: Response) => {
-  try {
-    const userData = req.body as User;
-    const result = await CreateUser(userData);
-    res.status(200).json({ mykey: result });
-  } catch (err: any) {
-    return res.json({ error: err });
+router.post(
+  "/signup",
+  checkRequestBodyParams([
+    "email",
+    "password",
+    "firstname",
+    "lastname",
+    "username",
+  ]),
+  async (req: Request, res: Response) => {
+    try {
+      const userData = req.body as User;
+      const result = await CreateUser(userData);
+      res.status(200).json({ mykey: result });
+    } catch (err: any) {
+      return res.json({ error: err });
+    }
   }
-});
+);
 router.post(
   "/login",
   checkRequestBodyParams(["email", "password"]),

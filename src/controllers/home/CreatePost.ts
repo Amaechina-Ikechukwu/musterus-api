@@ -1,4 +1,4 @@
-import { getFirestore } from "firebase-admin/firestore";
+import { FieldValue, getFirestore } from "firebase-admin/firestore";
 import generateUniqueID from "../../middlewares/uuids";
 
 export default async function CreatePost(
@@ -11,7 +11,11 @@ export default async function CreatePost(
     await getFirestore()
       .collection("posts")
       .doc(postid)
-      .set({ ...postinfo, author: uid });
+      .set({
+        ...postinfo,
+        author: uid,
+        createdAt: FieldValue.serverTimestamp(),
+      });
 
     return "post created";
   } catch (error: any) {
