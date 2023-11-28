@@ -1,9 +1,11 @@
 import { FieldValue, getFirestore } from "firebase-admin/firestore";
+import GetUserProfileInformation from "../controllers/profile/getuserprofileinformation";
 
 export interface Conversation {
   conversationId: string;
   participants: string[]; // Array of participant IDs
   lastMessage?: Message; // Optional last message in the conversation
+  friendinfo: any;
 }
 
 export interface Message {
@@ -13,7 +15,10 @@ export interface Message {
   mediaUrl?: string; // Optional media URL
   type: string; // Message type (text, image, etc.)
 }
-
+const getFriendsId = (uid: string, participants: any) => {
+  const friendid = participants.filter((part: any) => part !== uid);
+  return friendid;
+};
 export async function getUserChatList(uid: string): Promise<Conversation[]> {
   const firestore = getFirestore();
 
@@ -25,20 +30,25 @@ export async function getUserChatList(uid: string): Promise<Conversation[]> {
 
     const chatList: Conversation[] = [];
 
-    conversationsSnapshot.forEach((conversationDoc) => {
+    for (const conversationDoc of conversationsSnapshot.docs) {
       const conversationData = conversationDoc.data();
       const participants: string[] = conversationData.participants;
       const conversationId = conversationDoc.id;
       const lastMessage = conversationData.lastMessage || null; // Change this if you store last message info
 
+      const friendinfo = await GetUserProfileInformation(
+        getFriendsId(uid, participants)
+      );
+
       const conversation: Conversation = {
         conversationId,
         participants,
         lastMessage,
+        friendinfo,
       };
 
       chatList.push(conversation);
-    });
+    }
 
     return chatList;
   } catch (error: any) {
