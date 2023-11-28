@@ -17,7 +17,7 @@ export interface Message {
 }
 const getFriendsId = (uid: string, participants: any) => {
   const friendid = participants.filter((part: any) => part !== uid);
-  return friendid;
+  return friendid[0];
 };
 export async function getUserChatList(uid: string): Promise<Conversation[]> {
   const firestore = getFirestore();
