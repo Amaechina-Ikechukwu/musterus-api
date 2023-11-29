@@ -18,6 +18,7 @@ export default async function GetUsersPosts(uid: string): Promise<any[]> {
     // Create a query to fetch posts by user's friends or the user themselves
     const querySnapshot: QuerySnapshot<DocumentData> = await query
       .where("author", "in", [...userFriends, uid])
+      .orderBy("createdAt")
       .get();
 
     const postsPromises: Promise<any>[] = querySnapshot.docs.map(
