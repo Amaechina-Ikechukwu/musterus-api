@@ -17,7 +17,8 @@ export async function LoginUser(user: User) {
     if (snapshot.empty) {
       try {
         const result = await musteruslogin(user.email, user.password);
-        await initializeprofile(result.mykey, result.mskl);
+
+        await initializeprofile(result.mykey, result.mskl, user.password);
         return result.mykey;
       } catch (err: any) {
         return "No user found";
