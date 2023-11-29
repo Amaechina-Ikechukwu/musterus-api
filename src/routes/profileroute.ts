@@ -8,6 +8,8 @@ import FollowUser from "../controllers/profile/FollowerUser";
 import AmIFollowingUser from "../controllers/profile/AmIFollowing";
 import GetUserFriends from "../controllers/profile/GetUserFriends";
 import GetUserFullProfileInformation from "../controllers/profile/GetUserFullInformation";
+import GetSuggestedUsers from "../controllers/profile/SuggestedUsers";
+import GetMyPosts from "../controllers/profile/GetMyPost";
 
 class CustomUserProfileError extends Error {
   constructor(message: string) {
@@ -35,6 +37,27 @@ profilerouter.get("/", VerifyToken, async (req: Request, res: Response) => {
     return res.json({ error: err });
   }
 });
+profilerouter.get(
+  "/myposts",
+  VerifyToken,
+  async (req: Request, res: Response) => {
+    try {
+      const uid = (req as any).uid;
+      const result = await GetMyPosts(uid);
+
+      res.status(200).json({ userposts: result });
+    } catch (err: any) {
+      if (err instanceof CustomUserProfileError) {
+        return res.status(400).json({ error: err.message });
+      } else if (err instanceof Error) {
+        // Handle other specific errors as needed
+        return res.status(500).json({ error: err });
+      }
+
+      return res.json({ error: err });
+    }
+  }
+);
 profilerouter.get("/full", VerifyToken, async (req: Request, res: Response) => {
   try {
     const uid = (req as any).uid;
@@ -52,6 +75,27 @@ profilerouter.get("/full", VerifyToken, async (req: Request, res: Response) => {
     return res.json({ error: err });
   }
 });
+profilerouter.get(
+  "/suggestedfriends",
+  VerifyToken,
+  async (req: Request, res: Response) => {
+    try {
+      const uid = (req as any).uid;
+      const result = await GetSuggestedUsers(uid);
+
+      res.status(200).json({ userfriends: result });
+    } catch (err: any) {
+      if (err instanceof CustomUserProfileError) {
+        return res.status(400).json({ error: err.message });
+      } else if (err instanceof Error) {
+        // Handle other specific errors as needed
+        return res.status(500).json({ error: err });
+      }
+
+      return res.json({ error: err });
+    }
+  }
+);
 profilerouter.get(
   "/userfriends",
   VerifyToken,

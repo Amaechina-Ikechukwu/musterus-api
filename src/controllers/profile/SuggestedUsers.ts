@@ -19,16 +19,18 @@ export default async function GetSuggestedUsers(uid: string): Promise<any[]> {
       // Retrieve each friend's data and determine if the user is following them
       const friendsDataPromises = friendsCollection.docs.map(
         async (friendDoc) => {
-          const friendId = friendDoc.id;
-          const userData = await GetUserProfileInformation(friendId);
-          const isFollowing = await AmIFollowingUser(uid, friendId);
+          if (friendDoc.id !== uid) {
+            const friendId = friendDoc.id;
+            const userData = await GetUserProfileInformation(friendId);
+            const isFollowing = await AmIFollowingUser(uid, friendId);
 
-          const friendWithFollowing = {
-            id: friendId,
-            ...userData,
-            isFollowing,
-          };
-          suggestedUser.push(friendWithFollowing);
+            const friendWithFollowing = {
+              id: friendId,
+              ...userData,
+              isFollowing,
+            };
+            suggestedUser.push(friendWithFollowing);
+          }
         }
       );
 
