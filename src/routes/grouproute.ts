@@ -23,6 +23,7 @@ import {
   MakeAnAdmin,
 } from "../controllers/groups/AdminActions";
 import UpdateGroup from "../controllers/groups/UpdateGroup";
+import SuggestedGroups from "../controllers/groups/SuggestedGroups";
 
 class CustomUserProfileError extends Error {
   constructor(message: string) {
@@ -54,6 +55,23 @@ grouprouter.get(
     }
   }
 );
+grouprouter.get("/", VerifyToken, async (req: Request, res: Response) => {
+  try {
+    const uid = (req as any).uid;
+    const result = await SuggestedGroups(uid);
+
+    res.status(200).json({ groups: result });
+  } catch (err: any) {
+    if (err instanceof CustomUserProfileError) {
+      return res.status(400).json({ error: err.message });
+    } else if (err instanceof Error) {
+      // Handle other specific errors as needed
+      return res.status(500).json({ error: err });
+    }
+
+    return res.json({ error: err });
+  }
+});
 
 grouprouter.post(
   "/creategroup",
@@ -110,8 +128,8 @@ grouprouter.post(
   async (req: Request, res: Response) => {
     try {
       const uid = (req as any).uid;
-      const { message, groupid ,media} = req.body;
-      const result = await SendMessageToGroup(uid, groupid, message,media);
+      const { message, groupid, media } = req.body;
+      const result = await SendMessageToGroup(uid, groupid, message, media);
 
       res.status(200).json({ message: result });
     } catch (err: any) {

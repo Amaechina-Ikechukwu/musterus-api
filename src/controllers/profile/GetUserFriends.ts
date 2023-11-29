@@ -1,8 +1,9 @@
 import { getFirestore } from "firebase-admin/firestore";
+import GetUserProfileInformation from "./getuserprofileinformation";
 
 function removeFieldsFromUserProfile(userProfile: any) {
-  delete userProfile.password;
-  return userProfile;
+  const { password, ...rest } = userProfile;
+  return rest;
 }
 
 export default async function GetUserFriends(uid: string): Promise<any[]> {
@@ -16,13 +17,15 @@ export default async function GetUserFriends(uid: string): Promise<any[]> {
     if (friendsCollection.empty) {
       return []; // Return an empty array if the user has no friends
     } else {
-      // Map through the friends collection and retrieve each friend's data
-      const friendsData = friendsCollection.docs.map((friendDoc) => {
-        const friend = friendDoc.data();
-        return friend;
-      });
+      const friendInfo: any[] = [];
 
-      return friendsData;
+      // Map through the friends collection and retrieve each friend's data
+      for (const friendDoc of friendsCollection.docs) {
+        const friend = await GetUserProfileInformation(friendDoc.id);
+        friendInfo.push({ id: friendDoc.id, ...friend });
+      }
+
+      return friendInfo;
     }
   } catch (error: any) {
     console.error("Error fetching user's friends:", error);

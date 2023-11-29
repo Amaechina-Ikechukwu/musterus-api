@@ -22,6 +22,7 @@ router.post(
     "firstname",
     "lastname",
     "username",
+    "birthdate",
   ]),
   async (req: Request, res: Response) => {
     try {
@@ -42,6 +43,7 @@ router.post(
       const result = await LoginUser(userData);
       res.status(200).json({ mykey: result });
     } catch (err: any) {
+      console.log(err);
       return res.json({ error: err });
     }
   }

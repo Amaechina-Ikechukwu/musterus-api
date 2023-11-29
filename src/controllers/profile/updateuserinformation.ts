@@ -14,12 +14,8 @@ export default async function UpdateUserProfileInformation(
       .collection("profile")
       .doc(uid)
       .update(userData);
-    await InitializeStudent(uid, userData)
-      .then(() => {})
-      .catch((err) => {
-        throw new Error(err);
-      });
-    return res;
+
+    return "profile updated";
   } catch (error: any) {
     console.log(error);
     if (error instanceof Error && "code" in error) {

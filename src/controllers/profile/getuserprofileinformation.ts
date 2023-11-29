@@ -1,6 +1,7 @@
 import { getFirestore } from "firebase-admin/firestore";
 function removeFieldsFromUserProfile(userProfile: any) {
   delete userProfile.password;
+  delete userProfile.lastUpdated;
   return userProfile;
 }
 export default async function GetUserProfileInformation(

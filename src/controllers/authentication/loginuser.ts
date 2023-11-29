@@ -3,6 +3,8 @@ import { User } from "../../interfaces/userinterface";
 import AddUserToDatabase from "./addusertodatabase";
 import { getFirestore } from "firebase-admin/firestore";
 import { CreateToken } from "./createtoken";
+import { musteruslogin } from "./muateruslogin";
+import { initializeprofile } from "./initializprofile";
 
 export async function LoginUser(user: User) {
   try {
@@ -13,7 +15,13 @@ export async function LoginUser(user: User) {
       .where("password", "==", user.password)
       .get();
     if (snapshot.empty) {
-      return "No user found";
+      try {
+        const result = await musteruslogin(user.email, user.password);
+        await initializeprofile(result.mykey, result.mskl);
+        return result.mykey;
+      } catch (err: any) {
+        return "No user found";
+      }
     }
 
     const profile: any[] = [];
