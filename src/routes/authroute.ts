@@ -7,6 +7,7 @@ import { VerifyEmail } from "../controllers/authentication/verifyemail";
 import { VerifyToken } from "../middlewares/verifytoken";
 import { DeleteUser } from "../controllers/authentication/deleteuser";
 import { LoginUser } from "../controllers/authentication/loginuser";
+import { ResetPassword } from "../controllers/authentication/resetpassword";
 const router = Router();
 class CustomUserProfileError extends Error {
   constructor(message: string) {
@@ -42,6 +43,22 @@ router.post(
       const userData = req.body as User;
       const result = await LoginUser(userData);
       res.status(200).json({ mykey: result });
+    } catch (err: any) {
+      console.log(err);
+      return res.json({ error: err });
+    }
+  }
+);
+router.post(
+  "/resetpassword",
+  checkRequestBodyParams(["oldpassword", "newpassword"]),
+  VerifyToken,
+  async (req: Request, res: Response) => {
+    try {
+      const uid = (req as any).uid;
+      const { oldpassword, newpassword } = req.body;
+      const result = await ResetPassword(uid, oldpassword, newpassword);
+      res.status(200).json({ message: result });
     } catch (err: any) {
       console.log(err);
       return res.json({ error: err });

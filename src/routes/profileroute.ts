@@ -10,6 +10,7 @@ import GetUserFriends from "../controllers/profile/GetUserFriends";
 import GetUserFullProfileInformation from "../controllers/profile/GetUserFullInformation";
 import GetSuggestedUsers from "../controllers/profile/SuggestedUsers";
 import GetMyPosts from "../controllers/profile/GetMyPost";
+import { getUserFriendsBirthdays } from "../controllers/profile/GetUserFriendsBirthdays";
 
 class CustomUserProfileError extends Error {
   constructor(message: string) {
@@ -105,6 +106,27 @@ profilerouter.get(
       const result = await GetUserFriends(uid);
 
       res.status(200).json({ userfriends: result });
+    } catch (err: any) {
+      if (err instanceof CustomUserProfileError) {
+        return res.status(400).json({ error: err.message });
+      } else if (err instanceof Error) {
+        // Handle other specific errors as needed
+        return res.status(500).json({ error: err });
+      }
+
+      return res.json({ error: err });
+    }
+  }
+);
+profilerouter.get(
+  "/birthdays",
+  VerifyToken,
+  async (req: Request, res: Response) => {
+    try {
+      const uid = (req as any).uid;
+      const result = await getUserFriendsBirthdays(uid);
+
+      res.status(200).json({ birthdays: result });
     } catch (err: any) {
       if (err instanceof CustomUserProfileError) {
         return res.status(400).json({ error: err.message });
