@@ -2,9 +2,11 @@ import { getFirestore, QuerySnapshot } from "firebase-admin/firestore";
 import GetUserFriends from "./GetUserFriends";
 
 interface UserProfile {
-  name: string;
+  firstname: string;
+  lastname: string;
   birthdate: string; // Assuming birthdate is stored in the format 'yyyy-mm-dd'
   photourl: string;
+  id: string;
 }
 
 interface BirthdayInfo {
@@ -12,6 +14,7 @@ interface BirthdayInfo {
   occurrence: string;
   reference: string;
   photourl: string;
+  id: string;
 }
 
 // ... (previous imports and interfaces remain the same)
@@ -53,27 +56,30 @@ export async function getUserFriendsBirthdays(
 
         if (friendMonth === todayMonth && friendDay === todayDay) {
           birthdays.push({
-            name: userProfile.name,
+            name: userProfile.firstname + " " + userProfile.lastname,
             occurrence: "today",
             reference: userProfile.birthdate,
             photourl: userProfile.photourl,
+            id: userProfile.id,
           });
         } else if (friendMonth === tomorrowMonth && friendDay === tomorrowDay) {
           birthdays.push({
-            name: userProfile.name,
+            name: userProfile.firstname + " " + userProfile.lastname,
             occurrence: "tomorrow",
             reference: userProfile.birthdate,
             photourl: userProfile.photourl,
+            id: userProfile.id,
           });
         } else if (
           friendMonth === dayAfterTomorrowMonth &&
           friendDay === dayAfterTomorrowDay
         ) {
           birthdays.push({
-            name: userProfile.name,
+            name: userProfile.firstname + " " + userProfile.lastname,
             occurrence: "day after tomorrow",
             reference: userProfile.birthdate,
             photourl: userProfile.photourl,
+            id: userProfile.id,
           });
         }
       }
