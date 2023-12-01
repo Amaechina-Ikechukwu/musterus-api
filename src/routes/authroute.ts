@@ -47,8 +47,7 @@ router.post(
       }
       res.status(200).json({ mykey: result });
     } catch (err: any) {
-      console.log(err);
-      return res.json({ error: err });
+      return res.status(400).json({ error: err });
     }
   }
 );
