@@ -42,6 +42,9 @@ router.post(
     try {
       const userData = req.body as User;
       const result = await LoginUser(userData);
+      if (result == "No user found") {
+        res.status(401).json({ message: result });
+      }
       res.status(200).json({ mykey: result });
     } catch (err: any) {
       console.log(err);
