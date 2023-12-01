@@ -4,6 +4,7 @@ import {
   QuerySnapshot,
   DocumentData,
   Query,
+  Filter,
 } from "firebase-admin/firestore";
 import GetUserFriends from "../profile/GetUserFriends";
 import GetUserProfileInformation from "../profile/getuserprofileinformation";
@@ -18,11 +19,18 @@ export default async function GetUsersPosts(uid: string): Promise<PostData[]> {
     const firestore: Firestore = getFirestore();
     const userFriends = await GetUserFriends(uid);
 
+    const extractIds = (data: any) => {
+      return data.map((item: any) => item.id);
+    };
+
+    // Collect user IDs including the user's own ID
+    const allUserIds = [uid, ...extractIds(userFriends)];
+
     const query: Query<DocumentData> = firestore.collection("posts");
 
     // Create a query to fetch posts by user's friends or the user themselves
     const querySnapshot: QuerySnapshot<DocumentData> = await query
-      .where("author", "in", [...userFriends, uid]) // Ensure userFriends is an array of UIDs
+      .where("author", "in", allUserIds) // Fetch posts by user and their friends
       .orderBy("createdAt", "desc")
       .get();
 

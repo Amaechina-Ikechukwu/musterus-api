@@ -24,6 +24,7 @@ import {
 } from "../controllers/groups/AdminActions";
 import UpdateGroup from "../controllers/groups/UpdateGroup";
 import SuggestedGroups from "../controllers/groups/SuggestedGroups";
+import AddUserToGroup from "../controllers/groups/AddUserToGroup";
 
 class CustomUserProfileError extends Error {
   constructor(message: string) {
@@ -164,6 +165,22 @@ grouprouter.post(
       }
 
       return res.json({ error: err });
+    }
+  }
+);
+grouprouter.post(
+  "/addusertogroup",
+  checkRequestBodyParams(["groupid", "friendid"]),
+  VerifyToken,
+  async (req: Request, res: Response) => {
+    try {
+      const uid = (req as any).uid;
+      const { groupid, friendid } = req.body;
+      const result = await AddUserToGroup(uid, groupid, friendid);
+
+      res.status(200).json({ message: result });
+    } catch (err: any) {
+      return res.status(401).json({ error: err });
     }
   }
 );
