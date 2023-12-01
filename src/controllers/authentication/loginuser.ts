@@ -21,7 +21,7 @@ export async function LoginUser(user: User) {
         await initializeprofile(result.mykey, result.mskl, user.password);
         return result.mykey;
       } catch (err: any) {
-        return "No user found";
+        throw new Error("No user found");
       }
     }
 
