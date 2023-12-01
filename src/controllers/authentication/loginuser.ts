@@ -1,7 +1,7 @@
 import { auth, FirebaseError } from "firebase-admin";
 import { User } from "../../interfaces/userinterface";
 import AddUserToDatabase from "./addusertodatabase";
-import { getFirestore } from "firebase-admin/firestore";
+import { Filter, getFirestore } from "firebase-admin/firestore";
 import { CreateToken } from "./createtoken";
 import { musteruslogin } from "./muateruslogin";
 import { initializeprofile } from "./initializprofile";
@@ -11,7 +11,13 @@ export async function LoginUser(user: User) {
     const firestore = getFirestore();
     const snapshot = await firestore
       .collection("profile")
-      .where("email", "==", user.email)
+      .where(
+        Filter.or(
+          Filter.where("email", "==", user.email),
+          Filter.where("registeremail", "==", user.email),
+          Filter.where("username", "==", user.email)
+        )
+      )
       .where("password", "==", user.password)
       .get();
     if (snapshot.empty) {
