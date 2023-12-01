@@ -17,7 +17,7 @@ export const initializeprofile = async (
     const firestore = getFirestore();
     await auth().createUser({
       uid: mykey,
-      email: response.data.MyProfile.email,
+      email: response.data.MyProfile.registeremail,
       // phoneNumber: response.data.MyProfile.phoneNumber,
       password: password,
       displayName:
