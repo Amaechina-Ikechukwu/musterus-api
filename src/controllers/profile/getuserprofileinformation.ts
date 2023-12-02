@@ -13,7 +13,7 @@ export default async function GetUserProfileInformation(
     if (!doc.exists) {
       return "No such document!";
     } else {
-      const user = doc.data();
+      const user = { id: doc.id, ...doc.data() };
       return removeFieldsFromUserProfile(user);
     }
   } catch (error: any) {
