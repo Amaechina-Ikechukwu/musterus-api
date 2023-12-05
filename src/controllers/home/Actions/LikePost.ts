@@ -2,7 +2,8 @@ import { getFirestore } from "firebase-admin/firestore";
 
 export default async function LikePost(
   uid: string,
-  postid: string
+  postid: string,
+  action: string
 ): Promise<string> {
   try {
     await getFirestore()
@@ -10,7 +11,7 @@ export default async function LikePost(
       .doc(postid)
       .collection("likes")
       .doc(uid)
-      .set({});
+      .set({ action });
 
     return "post liked";
   } catch (error: any) {

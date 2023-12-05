@@ -3,7 +3,8 @@ import generateUniqueID from "../../../../middlewares/uuids";
 
 export default async function LikeGroupPost(
   uid: string,
-  postid: string
+  postid: string,
+  action: string
 ): Promise<string> {
   try {
     await getFirestore()
@@ -11,7 +12,7 @@ export default async function LikeGroupPost(
       .doc(postid)
       .collection("likes")
       .doc(uid)
-      .set({});
+      .set({ action });
 
     return "post liked";
   } catch (error: any) {

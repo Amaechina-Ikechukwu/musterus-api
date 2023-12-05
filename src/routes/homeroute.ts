@@ -12,6 +12,7 @@ import CommentOnPost from "../controllers/home/CommentOnPost";
 import SinglePost from "../controllers/home/Singlepost";
 import SavePostToProfile from "../controllers/home/SavePostToProfile";
 import GetUsersPosts from "../controllers/home/GetAllUserPost";
+import DeletePost from "../controllers/home/DeletePost";
 
 class CustomUserProfileError extends Error {
   constructor(message: string) {
@@ -48,14 +49,36 @@ homerouter.post(
   }
 );
 homerouter.post(
-  "/likepost",
-  checkRequestBodyParams(["postid"]),
+  "/deletepost",
   VerifyToken,
   async (req: Request, res: Response) => {
     try {
       const uid = (req as any).uid;
       const { postid } = req.body;
-      const result = await LikePost(uid, postid);
+      const result = await DeletePost(uid, postid);
+
+      res.status(200).json({ message: result });
+    } catch (err: any) {
+      if (err instanceof CustomUserProfileError) {
+        return res.status(400).json({ error: err.message });
+      } else if (err instanceof Error) {
+        // Handle other specific errors as needed
+        return res.status(500).json({ error: err });
+      }
+
+      return res.json({ error: err });
+    }
+  }
+);
+homerouter.post(
+  "/likepost",
+  checkRequestBodyParams(["postid", "action"]),
+  VerifyToken,
+  async (req: Request, res: Response) => {
+    try {
+      const uid = (req as any).uid;
+      const { postid, action } = req.body;
+      const result = await LikePost(uid, postid, action);
 
       res.status(200).json({ message: result });
     } catch (err: any) {

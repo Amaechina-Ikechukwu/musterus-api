@@ -5,7 +5,7 @@ export default async function SendMessageToGroup(
   uid: string,
   groupId: string,
   message: string,
-  media: any[]
+  mediaurl: string
 ): Promise<any> {
   const firestore = getFirestore();
 
@@ -18,7 +18,12 @@ export default async function SendMessageToGroup(
       .doc(groupId)
       .collection("chats")
       .doc()
-      .set({ from: uid, message, sent: FieldValue.serverTimestamp(), media });
+      .set({
+        from: uid,
+        message,
+        sent: FieldValue.serverTimestamp(),
+        mediaurl,
+      });
 
     return "sent";
   } catch (error: any) {

@@ -129,8 +129,8 @@ grouprouter.post(
   async (req: Request, res: Response) => {
     try {
       const uid = (req as any).uid;
-      const { message, groupid, media } = req.body;
-      const result = await SendMessageToGroup(uid, groupid, message, media);
+      const { message, groupid, mediaurl } = req.body;
+      const result = await SendMessageToGroup(uid, groupid, message, mediaurl);
 
       res.status(200).json({ message: result });
     } catch (err: any) {
@@ -233,13 +233,13 @@ grouprouter.post(
 );
 grouprouter.post(
   "/likepost",
-  checkRequestBodyParams(["postid"]),
+  checkRequestBodyParams(["postid", "action"]),
   VerifyToken,
   async (req: Request, res: Response) => {
     try {
       const uid = (req as any).uid;
-      const { postid } = req.body;
-      const result = await LikeGroupPost(uid, postid);
+      const { postid, action } = req.body;
+      const result = await LikeGroupPost(uid, postid, action);
 
       res.status(200).json({ message: result });
     } catch (err: any) {

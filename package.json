@@ -1,7 +1,7 @@
 {
-  "name": "kal",
+  "name": "musterus",
   "version": "1.0.0",
-  "description": "an api that lets newly admitted students know find faculty and course mates",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "jest",
