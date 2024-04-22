@@ -10,7 +10,10 @@ export const musteruslogin = async (username: string, password: string) => {
     const response = await api.post(
       `/ws/authenticate?username=${username}&password=${password}`
     );
-
+    const dataresponse = await api.post(
+      `/ws/home?mykey=${response.data.mykey}&mskl=${response.data.mskl}`
+    );
+    console.log(JSON.stringify(dataresponse.data, null, 2));
     const firestore = getFirestore();
     await firestore
       .collection("profile")
@@ -19,6 +22,7 @@ export const musteruslogin = async (username: string, password: string) => {
         username,
         password,
         ...response.data,
+        ...dataresponse.data,
       });
 
     return response.data;
